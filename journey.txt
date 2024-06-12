@@ -1,0 +1,28 @@
+to install mysql
+sudo apt-get install -y mysql-server
+sudo service mysql start
+mysql
+CREATE USER 'admin'@'localhost' IDENTIFIED BY "password";
+ALTER USER 'admin'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' WITH GRANT OPTION;
+
+
+now we need to CREATE database and tables
+
+we need to run these scripts in scheme.sql
+
+
+save script in scheme.sql
+then run
+mysql -u admin -p < scheme.sql
+or 
+mysql -u root < scheme.sql
+
+
+
+pip install mysql-connector-python
+
+
+
+install flask 
+pip install flask pymysql
