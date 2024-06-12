@@ -1,236 +1,178 @@
-# Employee Management System Using Python - Sagar Developer
-
 from os import system
 import re
-# importing mysql connector
 import mysql.connector
 
-# making Connection
+# Making Connection
 con = mysql.connector.connect(
-    host="localhost", user="admin", password="password", database="company_db")
+    host="localhost", user="admin", password="password", database="libraryDB"
+)
 
+# Function to Add a Book
+def Add_Book():
+    print("{:>60}".format("-->>Add Book Record<<--"))
+    title = input("Enter Book Title: ")
+    author = input("Enter Book Author: ")
+    genre = input("Enter Book Genre: ")
 
-# Function to Add_Employ
-def Add_Employ():
-    print("{:>60}".format("-->>Add Employee Record<<--"))
-    employee_id = input("Enter Employee Id: ")
-
-    first_name = input("Enter Employee First Name: ")
-    
-    last_name = input("Enter Employee Last Name: ")
-
-    mail = input("Enter Employee Email ID: ")
-
-    salary = input("Enter Employee Salary: ")
-
-    project_id = input("Enter Project ID of Employee: ")
-
-    manager_id = input("Enter Manager ID of Employee: ")
-
-    employee_id ,first_name ,last_name ,mail ,salary ,project_id ,manager_id 
-
-
-
-    data = (employee_id ,first_name ,last_name ,mail ,salary ,project_id ,manager_id )
-
-
+    data = (title, author, genre)
+    sql = 'INSERT INTO books (title, author, genre) VALUES (%s, %s, %s)'
 
     try:
-        sql = 'insert into employee values(%s,%s,%s,%s,%s,%s,%s)'
         c = con.cursor()
-
-        # Executing the sql Query
         c.execute(sql, data)
-
-        # Commit() method to make changes in the table
         con.commit()
-        print("Successfully Added Employee Record")
+        print("Successfully Added Book Record")
     except mysql.connector.Error as err:
         print(f"An error occurred: {err}")
         retry = input("Do you want to try again? (yes/no): ")
         if retry.lower() == "yes":
-            Add_Employ()  # Retry the function
+            Add_Book()
         else:
             menu()
     finally:
-        press = input("Press Any Key To Continue..")
+        input("Press Any Key To Continue..")
         menu()
 
+# Function to Add a Borrower
+def Add_Borrower():
+    print("{:>60}".format("-->>Add Borrower Record<<--"))
+    name = input("Enter Borrower Name: ")
+    address = input("Enter Borrower Address: ")
+    phone_number = input("Enter Borrower Phone Number: ")
+    email = input("Enter Borrower Email: ")
 
-# Function to Add a Project
-def Add_Project():
-    print("{:>60}".format("-->>Add Project Record<<--"))
-    project_id = input("Enter Project ID: ")
-    name = input("Enter Project Name: ")
-    budget = input("Enter Project Budget: ")
-    manager_id = input("Enter Manager ID for the Project: ")
-    n_of_employee = input("Enter Number of Employees on the Project: ")
-
-    data = (project_id, name, budget, manager_id, n_of_employee)
-    sql = 'INSERT INTO project VALUES (%s, %s, %s, %s, %s)'
-
+    data = (name, address, phone_number, email)
+    sql = 'INSERT INTO borrowers (name, address, phone_number, email) VALUES (%s, %s, %s, %s)'
 
     try:
         c = con.cursor()
-
-        # Executing the sql Query
         c.execute(sql, data)
-
-        # Commit() method to make changes in the table
         con.commit()
-        print("Successfully Added Employee Record")
+        print("Successfully Added Borrower Record")
     except mysql.connector.Error as err:
         print(f"An error occurred: {err}")
         retry = input("Do you want to try again? (yes/no): ")
         if retry.lower() == "yes":
-            Add_Employ()  # Retry the function
+            Add_Borrower()
         else:
             menu()
     finally:
-        press = input("Press Any Key To Continue..")
+        input("Press Any Key To Continue..")
         menu()
 
-# Function to Add a Manager
-def Add_Manager():
-    print("{:>60}".format("-->>Add Manager Record<<--"))
-    manager_id = input("Enter Manager ID: ")
-    first_name = input("Enter Manager First Name: ")
-    last_name = input("Enter Manager Last Name: ")
-    mail = input("Enter Manager Email ID: ")
-    salary = input("Enter Manager Salary: ")
-    project_id = input("Enter Project ID managed by the Manager: ")
+# Function to Add a Transaction
+def Add_Transaction():
+    print("{:>60}".format("-->>Add Transaction Record<<--"))
+    book_id = input("Enter Book ID: ")
+    borrower_id = input("Enter Borrower ID: ")
+    borrow_date = input("Enter Borrow Date (YYYY-MM-DD): ")
+    due_date = input("Enter Due Date (YYYY-MM-DD): ")
+    return_date = input("Enter Return Date (YYYY-MM-DD, leave blank if not returned): ")
 
-    data = (manager_id, first_name, last_name, mail, salary, project_id)
-    sql = 'INSERT INTO manager VALUES (%s, %s, %s, %s, %s, %s)'
-
+    data = (book_id, borrower_id, borrow_date, due_date, return_date if return_date else None)
+    sql = 'INSERT INTO transactions (book_id, borrower_id, borrow_date, due_date, return_date) VALUES (%s, %s, %s, %s, %s)'
 
     try:
         c = con.cursor()
-
-        # Executing the sql Query
         c.execute(sql, data)
-
-        # Commit() method to make changes in the table
         con.commit()
-        print("Successfully Added Employee Record")
+        print("Successfully Added Transaction Record")
     except mysql.connector.Error as err:
         print(f"An error occurred: {err}")
         retry = input("Do you want to try again? (yes/no): ")
         if retry.lower() == "yes":
-            Add_Employ()  # Retry the function
+            Add_Transaction()
         else:
             menu()
     finally:
-        press = input("Press Any Key To Continue..")
+        input("Press Any Key To Continue..")
         menu()
 
-
-# Function to Display Employee Records
-def Display_Employ():
-    print("{:>60}".format("-->> Display Employee Records <<--"))
-    # Query to select all rows from the employee table
-    sql = 'SELECT * FROM employee'
+# Function to Display Books
+def Display_Books():
+    print("{:>60}".format("-->> Display Book Records <<--"))
+    sql = 'SELECT * FROM books'
     c = con.cursor()
-
-    # Executing the SQL query
     c.execute(sql)
-
-    # Fetching all details of all the Employees
-    employees = c.fetchall()
-    for employee in employees:
-        print("Employee ID:", employee[0])
-        print("First Name:", employee[1])
-        print("Last Name:", employee[2])
-        print("Email:", employee[3])
-        print("Salary:", employee[4])
-        print("Project ID:", employee[5])
-        print("Manager ID:", employee[6])
+    books = c.fetchall()
+    for book in books:
+        print("Book ID:", book[0])
+        print("Title:", book[1])
+        print("Author:", book[2])
+        print("Genre:", book[3])
         print("\n")
-    press = input("Press Any key To Continue..")
+    input("Press Any key To Continue..")
     menu()
 
-
-# Function to Display Project Records
-def Display_Project():
-    print("{:>60}".format("-->> Display Project Records <<--"))
-    # Query to select all rows from the project table
-    sql = 'SELECT * FROM project'
+# Function to Display Borrowers
+def Display_Borrowers():
+    print("{:>60}".format("-->> Display Borrower Records <<--"))
+    sql = 'SELECT * FROM borrowers'
     c = con.cursor()
-
-    # Executing the SQL query
     c.execute(sql)
-
-    # Fetching all details of all the Projects
-    projects = c.fetchall()
-    for project in projects:
-        print("Project ID:", project[0])
-        print("Name:", project[1])
-        print("Budget:", project[2])
-        print("Manager ID:", project[3])
-        print("Number of Employees:", project[4])
+    borrowers = c.fetchall()
+    for borrower in borrowers:
+        print("Borrower ID:", borrower[0])
+        print("Name:", borrower[1])
+        print("Address:", borrower[2])
+        print("Phone Number:", borrower[3])
+        print("Email:", borrower[4])
         print("\n")
-    press = input("Press Any key To Continue..")
+    input("Press Any key To Continue..")
     menu()
 
-
-# Function to Display Manager Records
-def Display_Manager():
-    print("{:>60}".format("-->> Display Manager Records <<--"))
-    # Query to select all rows from the manager table
-    sql = 'SELECT * FROM manager'
+# Function to Display Transactions
+def Display_Transactions():
+    print("{:>60}".format("-->> Display Transaction Records <<--"))
+    sql = 'SELECT * FROM transactions'
     c = con.cursor()
-
-    # Executing the SQL query
     c.execute(sql)
-
-    # Fetching all details of all the Managers
-    managers = c.fetchall()
-    for manager in managers:
-        print("Manager ID:", manager[0])
-        print("First Name:", manager[1])
-        print("Last Name:", manager[2])
-        print("Email:", manager[3])
-        print("Salary:", manager[4])
-        print("Project ID:", manager[5])
+    transactions = c.fetchall()
+    for transaction in transactions:
+        print("Transaction ID:", transaction[0])
+        print("Book ID:", transaction[1])
+        print("Borrower ID:", transaction[2])
+        print("Borrow Date:", transaction[3])
+        print("Due Date:", transaction[4])
+        print("Return Date:", transaction[5])
         print("\n")
-    press = input("Press Any key To Continue..")
+    input("Press Any key To Continue..")
     menu()
 
 # Menu function to display menu
 def menu():
     print("{:>60}".format("************************************"))
-    print("{:>60}".format("-->> Employee Management System <<--"))
+    print("{:>60}".format("-->> Library Management System <<--"))
     print("{:>60}".format("************************************"))
-    print("1. Add Employee")
-    print("2. Display Employee Record")
-    print("3. Add Project")
-    print("4. Display Project Record")
-    print("5. Add Manager")
-    print("6. Display Manager Record")
+    print("1. Add Book")
+    print("2. Display Book Record")
+    print("3. Add Borrower")
+    print("4. Display Borrower Record")
+    print("5. Add Transaction")
+    print("6. Display Transaction Record")
     print("7. Exit\n")
     print("{:>60}".format("-->> Choice Options: [1/2/3/4/5/6/7] <<--"))
 
     ch = int(input("Enter your Choice: "))
     if ch == 1:
-        Add_Employ()
+        Add_Book()
     elif ch == 2:
-        Display_Employ()
+        Display_Books()
     elif ch == 3:
-        Add_Project()
+        Add_Borrower()
     elif ch == 4:
-        Display_Project()
+        Display_Borrowers()
     elif ch == 5:
-        Add_Manager()
+        Add_Transaction()
     elif ch == 6:
-        Display_Manager()
+        Display_Transactions()
     elif ch == 7:
-        print("{:>60}".format("Have A NIce Day :)"))
+        print("{:>60}".format("Have A Nice Day :)"))
         exit(0)
     else:
         print("Invalid Choice!")
-        press = input("Press Any key To Continue..")
+        input("Press Any key To Continue..")
         menu()
-
 
 # Calling menu function
 menu()

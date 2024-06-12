@@ -1,4 +1,5 @@
 to install mysql
+sudo su
 sudo apt-get install -y mysql-server
 sudo service mysql start
 mysql
@@ -19,10 +20,10 @@ or
 mysql -u root < scheme.sql
 
 
-
+work with mysql in py
 pip install mysql-connector-python
 
 
 
 install flask 
-pip install flask pymysql
+pip install flask pymysql Flask-MySQL

@@ -1,37 +1,34 @@
 -- Create the database
-CREATE DATABASE IF NOT EXISTS company_db;
+CREATE DATABASE IF NOT EXISTS libraryDB;
 
 -- Switch to the new database
-USE company_db;
+USE libraryDB;
 
--- Create the manager table
-CREATE TABLE IF NOT EXISTS manager (
-    manager_id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    mail VARCHAR(100) NOT NULL,
-    salary DECIMAL(10, 2) NOT NULL,
-    project_id INT
+-- Create the books table
+CREATE TABLE IF NOT EXISTS books (
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    genre VARCHAR(100)
 );
 
--- Create the project table
-CREATE TABLE IF NOT EXISTS project (
-    project_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    budget DECIMAL(15, 2) NOT NULL,
-    manager_id INT,
-    n_of_employee INT
+-- Create the borrowers table
+CREATE TABLE IF NOT EXISTS borrowers (
+    borrower_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
+    phone_number VARCHAR(20),
+    email VARCHAR(100)
 );
 
--- Create the employee table
-CREATE TABLE IF NOT EXISTS employee (
-    employee_id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    mail VARCHAR(100) NOT NULL,
-    salary DECIMAL(10, 2) NOT NULL,
-    project_id INT,
-    manager_id INT
+-- Create the transactions table
+CREATE TABLE IF NOT EXISTS transactions (
+    transaction_id INT AUTO_INCREMENT PRIMARY KEY,
+    book_id INT NOT NULL,
+    borrower_id INT NOT NULL,
+    borrow_date DATE NOT NULL,
+    due_date DATE NOT NULL,
+    return_date DATE,
+    FOREIGN KEY (book_id) REFERENCES books(book_id),
+    FOREIGN KEY (borrower_id) REFERENCES borrowers(borrower_id)
 );
-
-
